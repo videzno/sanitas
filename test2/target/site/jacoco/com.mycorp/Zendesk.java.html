@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Zendesk.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">test2</a> &gt; <a href="index.source.html" class="el_package">com.mycorp</a> &gt; <span class="el_source">Zendesk.java</span></div><h1>Zendesk.java</h1><pre class="source lang-java linenums">package com.mycorp;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.mycorp.exceptions.ZendeskException;
+import com.mycorp.support.Ticket;
+import com.ning.http.client.AsyncCompletionHandler;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.ListenableFuture;
+import com.ning.http.client.Realm;
+import com.ning.http.client.Request;
+import com.ning.http.client.RequestBuilder;
+import com.ning.http.client.Response;
+import com.ning.http.client.uri.Uri;
+
+public class Zendesk implements Closeable {
+    private static final String JSON = &quot;application/json; charset=UTF-8&quot;;
+    private final boolean closeClient;
+    private final AsyncHttpClient client;
+    private final Realm realm;
+    private final String url;
+    private final String oauthToken;
+    private final ObjectMapper mapper;
+    private final Logger logger;
+<span class="fc" id="L38">    private boolean closed = false;</span>
+
+
+<span class="fc" id="L41">    public Zendesk(AsyncHttpClient client, String url, String username, String password) {</span>
+<span class="fc" id="L42">        this.logger = LoggerFactory.getLogger(Zendesk.class);</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        this.closeClient = client == null;</span>
+<span class="fc" id="L44">        this.oauthToken = null;</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        this.client = client == null ? new AsyncHttpClient() : client;</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        this.url = url.endsWith(&quot;/&quot;) ? url + &quot;api/v2&quot; : url + &quot;/api/v2&quot;;</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (username != null) {</span>
+<span class="fc" id="L48">            this.realm = new Realm.RealmBuilder()</span>
+<span class="fc" id="L49">                    .setScheme(Realm.AuthScheme.BASIC)</span>
+<span class="fc" id="L50">                    .setPrincipal(username)</span>
+<span class="fc" id="L51">                    .setPassword(password)</span>
+<span class="fc" id="L52">                    .setUsePreemptiveAuth(true)</span>
+<span class="fc" id="L53">                    .build();</span>
+        } else {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">            if (password != null) {</span>
+<span class="nc" id="L56">                throw new IllegalStateException(&quot;Cannot specify token or password without specifying username&quot;);</span>
+            }
+<span class="nc" id="L58">            this.realm = null;</span>
+        }
+<span class="fc" id="L60">        this.mapper = createMapper();</span>
+<span class="fc" id="L61">    }</span>
+    
+    
+
+    public Ticket createTicket(Ticket ticket) {
+<span class="nc" id="L66">        return complete(submit(req(&quot;POST&quot;, cnst(&quot;/tickets.json&quot;),</span>
+<span class="nc" id="L67">                        JSON, json(Collections.singletonMap(&quot;ticket&quot;, ticket))),</span>
+<span class="nc" id="L68">                handle(Ticket.class, &quot;ticket&quot;)));</span>
+    }
+
+    private byte[] json(Object object) {
+        try {
+<span class="nc" id="L73">            return mapper.writeValueAsBytes(object);</span>
+<span class="nc" id="L74">        } catch (JsonProcessingException e) {</span>
+<span class="nc" id="L75">            throw new ZendeskException(e.getMessage(), e);</span>
+        }
+    }
+
+<span class="fc" id="L79">    private static final Pattern RESTRICTED_PATTERN = Pattern.compile(&quot;%2B&quot;, Pattern.LITERAL);</span>
+
+    private Request req(String method, Uri template, String contentType, byte[] body) {
+<span class="nc" id="L82">        RequestBuilder builder = new RequestBuilder(method);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if (realm != null) {</span>
+<span class="nc" id="L84">            builder.setRealm(realm);</span>
+        } else {
+<span class="nc" id="L86">            builder.addHeader(&quot;Authorization&quot;, &quot;Bearer &quot; + oauthToken);</span>
+        }
+<span class="nc" id="L88">        builder.setUrl(RESTRICTED_PATTERN.matcher(template.toString()).replaceAll(&quot;+&quot;)); //replace out %2B with + due to API restriction</span>
+<span class="nc" id="L89">        builder.addHeader(&quot;Content-type&quot;, contentType);</span>
+<span class="nc" id="L90">        builder.setBody(body);</span>
+<span class="nc" id="L91">        return builder.build();</span>
+    }
+
+    public static ObjectMapper createMapper() {
+<span class="fc" id="L95">        ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L96">        mapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);</span>
+<span class="fc" id="L97">        mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);</span>
+<span class="fc" id="L98">        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);</span>
+<span class="fc" id="L99">        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);</span>
+<span class="fc" id="L100">        return mapper;</span>
+    }
+
+    private Uri cnst(String template) {
+<span class="nc" id="L104">        return Uri.create(url + template);</span>
+    }
+
+    private boolean isStatus2xx(Response response) {
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        return response.getStatusCode() / 100 == 2;</span>
+    }
+
+    private &lt;T&gt; ListenableFuture&lt;T&gt; submit(Request request, ZendeskAsyncCompletionHandler&lt;T&gt; handler) {
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (request.getStringData() != null) {</span>
+<span class="nc" id="L114">                logger.debug(&quot;Request {} {}\n{}&quot;, request.getMethod(), request.getUrl(), request.getStringData());</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">            } else if (request.getByteData() != null) {</span>
+<span class="nc" id="L116">                logger.debug(&quot;Request {} {} {} {} bytes&quot;, request.getMethod(), request.getUrl(),</span>
+<span class="nc" id="L117">                        request.getHeaders().getFirstValue(&quot;Content-type&quot;), request.getByteData().length);</span>
+            } else {
+<span class="nc" id="L119">                logger.debug(&quot;Request {} {}&quot;, request.getMethod(), request.getUrl());</span>
+            }
+        }
+<span class="nc" id="L122">        return client.executeRequest(request, handler);</span>
+    }
+
+    private void logResponse(Response response) throws IOException {
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (logger.isDebugEnabled()) {</span>
+<span class="nc" id="L127">            logger.debug(&quot;Response HTTP/{} {}\n{}&quot;, response.getStatusCode(), response.getStatusText(),</span>
+<span class="nc" id="L128">                    response.getResponseBody());</span>
+        }
+<span class="nc bnc" id="L130" title="All 2 branches missed.">        if (logger.isTraceEnabled()) {</span>
+<span class="nc" id="L131">            logger.trace(&quot;Response headers {}&quot;, response.getHeaders());</span>
+        }
+<span class="nc" id="L133">    }</span>
+
+    private boolean isRateLimitResponse(Response response) {
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        return response.getStatusCode() == 429;</span>
+    }
+
+    protected &lt;T&gt; ZendeskAsyncCompletionHandler&lt;T&gt; handle(final Class&lt;T&gt; clazz, final String name, final Class... typeParams) {
+<span class="nc" id="L140">        return new BasicAsyncCompletionHandler&lt;T&gt;(clazz, name, typeParams);</span>
+    }
+
+
+    private class BasicAsyncCompletionHandler&lt;T&gt; extends ZendeskAsyncCompletionHandler&lt;T&gt; {
+        private final Class&lt;T&gt; clazz;
+        private final String name;
+        private final Class[] typeParams;
+
+<span class="nc" id="L149">        public BasicAsyncCompletionHandler(Class clazz, String name, Class... typeParams) {</span>
+<span class="nc" id="L150">            this.clazz = clazz;</span>
+<span class="nc" id="L151">            this.name = name;</span>
+<span class="nc" id="L152">            this.typeParams = typeParams;</span>
+<span class="nc" id="L153">        }</span>
+
+        @Override
+        public T onCompleted(Response response) throws Exception {
+<span class="nc" id="L157">            logResponse(response);</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (isStatus2xx(response)) {</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                if (typeParams.length &gt; 0) {</span>
+<span class="nc" id="L160">                    JavaType type = mapper.getTypeFactory().constructParametricType(clazz, typeParams);</span>
+<span class="nc" id="L161">                    return mapper.convertValue(mapper.readTree(response.getResponseBodyAsStream()).get(name), type);</span>
+                }
+<span class="nc" id="L163">                return mapper.convertValue(mapper.readTree(response.getResponseBodyAsStream()).get(name), clazz);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            } else if (isRateLimitResponse(response)) {</span>
+<span class="nc" id="L165">                throw new ZendeskException(response.toString());</span>
+            }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            if (response.getStatusCode() == 404) {</span>
+<span class="nc" id="L168">                return null;</span>
+            }
+<span class="nc" id="L170">            throw new ZendeskException(response.toString());</span>
+        }
+    }
+
+
+<span class="nc" id="L175">    private static abstract class ZendeskAsyncCompletionHandler&lt;T&gt; extends AsyncCompletionHandler&lt;T&gt; {</span>
+        @Override
+        public void onThrowable(Throwable t) {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">            if (t instanceof IOException) {</span>
+<span class="nc" id="L179">                throw new ZendeskException(t);</span>
+            } else {
+<span class="nc" id="L181">                super.onThrowable(t);</span>
+            }
+<span class="nc" id="L183">        }</span>
+    }
+
+
+    //////////////////////////////////////////////////////////////////////
+    // Closeable interface methods
+    //////////////////////////////////////////////////////////////////////
+
+    public boolean isClosed() {
+<span class="nc bnc" id="L192" title="All 4 branches missed.">        return closed || client.isClosed();</span>
+    }
+
+    public void close() {
+<span class="nc bnc" id="L196" title="All 4 branches missed.">        if (closeClient &amp;&amp; !client.isClosed()) {</span>
+<span class="nc" id="L197">            client.close();</span>
+        }
+<span class="nc" id="L199">        closed = true;</span>
+<span class="nc" id="L200">    }</span>
+
+    //////////////////////////////////////////////////////////////////////
+    // Static helper methods
+    //////////////////////////////////////////////////////////////////////
+
+    private static &lt;T&gt; T complete(ListenableFuture&lt;T&gt; future) {
+        try {
+<span class="nc" id="L208">            return future.get();</span>
+<span class="nc" id="L209">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L210">            throw new ZendeskException(e.getMessage(), e);</span>
+<span class="nc" id="L211">        } catch (ExecutionException e) {</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">            if (e.getCause() instanceof ZendeskException) {</span>
+<span class="nc" id="L213">                throw (ZendeskException) e.getCause();</span>
+            }
+<span class="nc" id="L215">            throw new ZendeskException(e.getMessage(), e);</span>
+        }
+    }
+
+    public static class Builder {
+<span class="nc" id="L220">        private AsyncHttpClient client = null;</span>
+        private final String url;
+<span class="nc" id="L222">        private String username = null;</span>
+<span class="nc" id="L223">        private String password = null;</span>
+<span class="nc" id="L224">        private String token = null;</span>
+<span class="nc" id="L225">        private String oauthToken = null;</span>
+
+<span class="nc" id="L227">        public Builder(String url) {</span>
+<span class="nc" id="L228">            this.url = url;</span>
+<span class="nc" id="L229">        }</span>
+
+        public Builder setUsername(String username) {
+<span class="nc" id="L232">            this.username = username;</span>
+<span class="nc" id="L233">            return this;</span>
+        }
+
+        public Builder setPassword(String password) {
+<span class="nc" id="L237">            this.password = password;</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">            if (password != null) {</span>
+<span class="nc" id="L239">                this.token = null;</span>
+<span class="nc" id="L240">                this.oauthToken = null;</span>
+            }
+<span class="nc" id="L242">            return this;</span>
+        }
+
+        public Builder setToken(String token) {
+<span class="nc" id="L246">            this.token = token;</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">            if (token != null) {</span>
+<span class="nc" id="L248">                this.password = null;</span>
+<span class="nc" id="L249">                this.oauthToken = null;</span>
+            }
+<span class="nc" id="L251">            return this;</span>
+        }
+
+        public Zendesk build() {
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            if (token != null) {</span>
+<span class="nc" id="L256">                return new Zendesk(client, url, username + &quot;/token&quot;, token);</span>
+            }
+<span class="nc" id="L258">            return new Zendesk(client, url, username, password);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

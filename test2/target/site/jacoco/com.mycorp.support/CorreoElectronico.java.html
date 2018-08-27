@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CorreoElectronico.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">test2</a> &gt; <a href="index.source.html" class="el_package">com.mycorp.support</a> &gt; <span class="el_source">CorreoElectronico.java</span></div><h1>CorreoElectronico.java</h1><pre class="source lang-java linenums">package com.mycorp.support;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+
+public class CorreoElectronico extends DatosEnvioMail {
+    /** Contruye un objeto {@link CorreoElectronico} a partir de los parÃ¡metros recibidos. */
+<span class="nc" id="L9">    public CorreoElectronico( long idFuncionalidad, String idioma, List&lt; String &gt; params ) {</span>
+<span class="nc" id="L10">        this.funcionalidad = ( int )idFuncionalidad;</span>
+<span class="nc" id="L11">        this.idioma = idioma;</span>
+<span class="nc" id="L12">        this.params = params;</span>
+<span class="nc" id="L13">    }</span>
+
+    /** Contruye un objeto {@link CorreoElectronico} a partir de los parÃ¡metros recibidos. */
+<span class="nc" id="L16">    public CorreoElectronico( long idFuncionalidad, String idioma ) {</span>
+<span class="nc" id="L17">        this.funcionalidad = ( int )idFuncionalidad;</span>
+<span class="nc" id="L18">        this.idioma = idioma;</span>
+<span class="nc" id="L19">    }</span>
+
+    /**
+     * AÃ±ade un adjunto al {@link CorreoElectronico}.
+     *
+     * @param adjunto el adjunto
+     */
+    public CorreoElectronico addAdjunto( FicheroAdjunto adjunto ) {
+<span class="nc bnc" id="L27" title="All 6 branches missed.">        if ( adjunto != null &amp;&amp; adjunto.getContenido() != null &amp;&amp; StringUtils.isNotEmpty( adjunto.getNombre() ) ) {</span>
+<span class="nc" id="L28">            getAdjuntos().add( adjunto );</span>
+        }
+<span class="nc" id="L30">        return this;</span>
+    }
+
+    /**
+     * AÃ±ade un parÃ¡metro al {@link CorreoElectronico}.
+     *
+     * @param param el parÃ¡metro
+     */
+    public CorreoElectronico addParam( String param ) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if ( StringUtils.isNotBlank( param ) ) {</span>
+<span class="nc" id="L40">            getParams().add( param );</span>
+        }
+<span class="nc" id="L42">        return this;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L52">        return new StringBuilder().append( funcionalidad )</span>
+<span class="nc" id="L53">           .append( &quot;:{ [emailA: &quot; ).append( StringUtils.defaultString( emailA ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L54">           .append( &quot; [emailDe: &quot; ).append( StringUtils.defaultString( emailDe ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L55">           .append( &quot; [emailCC: &quot; ).append( StringUtils.defaultString( emailCC ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L56">           .append( &quot; [emailCCO: &quot; ).append( StringUtils.defaultString( emailCCO ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L57">           .append( &quot; [asunto: &quot; ).append( StringUtils.defaultString( asunto ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L58">           .append( &quot; [dias: &quot; ).append( StringUtils.defaultString( dias ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L59">           .append( &quot; [estado: &quot; ).append( estado ).append( &quot;]&quot; )</span>
+<span class="nc" id="L60">           .append( &quot; [idioma: &quot; ).append( StringUtils.defaultString( idioma ) ).append( &quot;]&quot; )</span>
+<span class="nc" id="L61">           .append( &quot; [idMensaje: &quot; ).append( idMensaje ).append( &quot;]}&quot; ).toString();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>

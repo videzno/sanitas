@@ -1,0 +1,17 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+test2,com.mycorp.exceptions,ZendeskException,16,0,0,0,8,0,4,0,4,0
+test2,com.mycorp.services,ClienteService,11,130,2,4,4,27,2,4,0,3
+test2,com.mycorp.services,ZendeskService,59,191,1,1,12,34,1,5,0,5
+test2,com.mycorp.services,BravoService,31,168,5,5,6,26,5,6,0,5
+test2,com.mycorp.support,ValueCode,3,14,0,0,1,6,1,4,1,4
+test2,com.mycorp.support,Ticket,3,0,0,0,1,0,1,0,1,0
+test2,com.mycorp.support,Poliza,106,24,4,0,37,9,22,5,20,5
+test2,com.mycorp.support,CorreoElectronico,127,0,8,0,25,0,9,0,5,0
+test2,com.mycorp.support,DatosCliente,356,39,0,0,154,15,101,12,101,12
+test2,com.mycorp.support,DatosEnvioMail,123,0,4,0,49,0,33,0,31,0
+test2,com.mycorp.support,FicheroAdjunto,18,0,0,0,7,0,5,0,5,0
+test2,com.mycorp.support,PolizaBasicoFromPolizaBuilder,13,45,4,2,1,11,3,3,0,3
+test2,com.mycorp,Zendesk,308,88,32,4,47,23,30,3,12,3
+test2,com.mycorp,Zendesk.ZendeskAsyncCompletionHandler,15,0,2,0,5,0,3,0,2,0
+test2,com.mycorp,Zendesk.Builder,86,0,6,0,23,0,8,0,5,0
+test2,com.mycorp,Zendesk.BasicAsyncCompletionHandler,93,0,8,0,16,0,6,0,2,0

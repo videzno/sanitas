@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DatosEnvioMail.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">test2</a> &gt; <a href="index.source.html" class="el_package">com.mycorp.support</a> &gt; <span class="el_source">DatosEnvioMail.java</span></div><h1>DatosEnvioMail.java</h1><pre class="source lang-java linenums">
+package com.mycorp.support;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+
+/**
+ * &lt;p&gt;Java class for datosEnvioMail complex type.
+ *
+ * &lt;p&gt;The following schema fragment specifies the expected content contained within this class.
+ *
+ * &lt;pre&gt;
+ * &amp;lt;complexType name=&quot;datosEnvioMail&quot;&gt;
+ *   &amp;lt;complexContent&gt;
+ *     &amp;lt;restriction base=&quot;{http://www.w3.org/2001/XMLSchema}anyType&quot;&gt;
+ *       &amp;lt;sequence&gt;
+ *         &amp;lt;element name=&quot;adjuntos&quot; type=&quot;{http://ws.mail.sanitas.es/}ficheroAdjunto&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;asunto&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;dias&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;emailA&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;emailCC&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;emailCCO&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;emailDe&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;estado&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot;/&gt;
+ *         &amp;lt;element name=&quot;funcionalidad&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot;/&gt;
+ *         &amp;lt;element name=&quot;idMensaje&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}long&quot;/&gt;
+ *         &amp;lt;element name=&quot;idioma&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;params&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; maxOccurs=&quot;unbounded&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;texto&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}string&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;tipoProgramacion&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}int&quot;/&gt;
+ *         &amp;lt;element name=&quot;fInsercion&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}dateTime&quot; minOccurs=&quot;0&quot;/&gt;
+ *         &amp;lt;element name=&quot;fProgramacion&quot; type=&quot;{http://www.w3.org/2001/XMLSchema}dateTime&quot; minOccurs=&quot;0&quot;/&gt;
+ *       &amp;lt;/sequence&gt;
+ *     &amp;lt;/restriction&gt;
+ *   &amp;lt;/complexContent&gt;
+ * &amp;lt;/complexType&gt;
+ * &lt;/pre&gt;
+ *
+ *
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = &quot;datosEnvioMail&quot;, propOrder = {
+    &quot;adjuntos&quot;,
+    &quot;asunto&quot;,
+    &quot;dias&quot;,
+    &quot;emailA&quot;,
+    &quot;emailCC&quot;,
+    &quot;emailCCO&quot;,
+    &quot;emailDe&quot;,
+    &quot;estado&quot;,
+    &quot;funcionalidad&quot;,
+    &quot;idMensaje&quot;,
+    &quot;idioma&quot;,
+    &quot;params&quot;,
+    &quot;texto&quot;,
+    &quot;tipoProgramacion&quot;,
+    &quot;fInsercion&quot;,
+    &quot;fProgramacion&quot;
+})
+<span class="nc" id="L69">public class DatosEnvioMail</span>
+    implements Serializable
+{
+
+    @XmlElement(nillable = true)
+    protected List&lt;FicheroAdjunto&gt; adjuntos;
+    protected String asunto;
+    protected String dias;
+    protected String emailA;
+    protected String emailCC;
+    protected String emailCCO;
+    protected String emailDe;
+    protected int estado;
+    protected int funcionalidad;
+    protected long idMensaje;
+    protected String idioma;
+    @XmlElement(nillable = true)
+    protected List&lt;String&gt; params;
+    protected String texto;
+    protected int tipoProgramacion;
+    @XmlSchemaType(name = &quot;dateTime&quot;)
+    protected XMLGregorianCalendar fInsercion;
+    @XmlSchemaType(name = &quot;dateTime&quot;)
+    protected XMLGregorianCalendar fProgramacion;
+
+    /**
+     * Gets the value of the adjuntos property.
+     *
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the adjuntos property.
+     *
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getAdjuntos().add(newItem);
+     * &lt;/pre&gt;
+     *
+     *
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link FicheroAdjunto }
+     *
+     *
+     */
+    public List&lt;FicheroAdjunto&gt; getAdjuntos() {
+<span class="nc bnc" id="L117" title="All 2 branches missed.">        if (adjuntos == null) {</span>
+<span class="nc" id="L118">            adjuntos = new ArrayList&lt;FicheroAdjunto&gt;();</span>
+        }
+<span class="nc" id="L120">        return this.adjuntos;</span>
+    }
+
+    /**
+     * Gets the value of the asunto property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getAsunto() {
+<span class="nc" id="L132">        return asunto;</span>
+    }
+
+    /**
+     * Sets the value of the asunto property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setAsunto(String value) {
+<span class="nc" id="L144">        this.asunto = value;</span>
+<span class="nc" id="L145">    }</span>
+
+    /**
+     * Gets the value of the dias property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getDias() {
+<span class="nc" id="L156">        return dias;</span>
+    }
+
+    /**
+     * Sets the value of the dias property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setDias(String value) {
+<span class="nc" id="L168">        this.dias = value;</span>
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * Gets the value of the emailA property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getEmailA() {
+<span class="nc" id="L180">        return emailA;</span>
+    }
+
+    /**
+     * Sets the value of the emailA property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setEmailA(String value) {
+<span class="nc" id="L192">        this.emailA = value;</span>
+<span class="nc" id="L193">    }</span>
+
+    /**
+     * Gets the value of the emailCC property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getEmailCC() {
+<span class="nc" id="L204">        return emailCC;</span>
+    }
+
+    /**
+     * Sets the value of the emailCC property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setEmailCC(String value) {
+<span class="nc" id="L216">        this.emailCC = value;</span>
+<span class="nc" id="L217">    }</span>
+
+    /**
+     * Gets the value of the emailCCO property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getEmailCCO() {
+<span class="nc" id="L228">        return emailCCO;</span>
+    }
+
+    /**
+     * Sets the value of the emailCCO property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setEmailCCO(String value) {
+<span class="nc" id="L240">        this.emailCCO = value;</span>
+<span class="nc" id="L241">    }</span>
+
+    /**
+     * Gets the value of the emailDe property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getEmailDe() {
+<span class="nc" id="L252">        return emailDe;</span>
+    }
+
+    /**
+     * Sets the value of the emailDe property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setEmailDe(String value) {
+<span class="nc" id="L264">        this.emailDe = value;</span>
+<span class="nc" id="L265">    }</span>
+
+    /**
+     * Gets the value of the estado property.
+     *
+     */
+    public int getEstado() {
+<span class="nc" id="L272">        return estado;</span>
+    }
+
+    /**
+     * Sets the value of the estado property.
+     *
+     */
+    public void setEstado(int value) {
+<span class="nc" id="L280">        this.estado = value;</span>
+<span class="nc" id="L281">    }</span>
+
+    /**
+     * Gets the value of the funcionalidad property.
+     *
+     */
+    public int getFuncionalidad() {
+<span class="nc" id="L288">        return funcionalidad;</span>
+    }
+
+    /**
+     * Sets the value of the funcionalidad property.
+     *
+     */
+    public void setFuncionalidad(int value) {
+<span class="nc" id="L296">        this.funcionalidad = value;</span>
+<span class="nc" id="L297">    }</span>
+
+    /**
+     * Gets the value of the idMensaje property.
+     *
+     */
+    public long getIdMensaje() {
+<span class="nc" id="L304">        return idMensaje;</span>
+    }
+
+    /**
+     * Sets the value of the idMensaje property.
+     *
+     */
+    public void setIdMensaje(long value) {
+<span class="nc" id="L312">        this.idMensaje = value;</span>
+<span class="nc" id="L313">    }</span>
+
+    /**
+     * Gets the value of the idioma property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getIdioma() {
+<span class="nc" id="L324">        return idioma;</span>
+    }
+
+    /**
+     * Sets the value of the idioma property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setIdioma(String value) {
+<span class="nc" id="L336">        this.idioma = value;</span>
+<span class="nc" id="L337">    }</span>
+
+    /**
+     * Gets the value of the params property.
+     *
+     * &lt;p&gt;
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a &lt;CODE&gt;set&lt;/CODE&gt; method for the params property.
+     *
+     * &lt;p&gt;
+     * For example, to add a new item, do as follows:
+     * &lt;pre&gt;
+     *    getParams().add(newItem);
+     * &lt;/pre&gt;
+     *
+     *
+     * &lt;p&gt;
+     * Objects of the following type(s) are allowed in the list
+     * {@link String }
+     *
+     *
+     */
+    public List&lt;String&gt; getParams() {
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        if (params == null) {</span>
+<span class="nc" id="L363">            params = new ArrayList&lt;String&gt;();</span>
+        }
+<span class="nc" id="L365">        return this.params;</span>
+    }
+
+    /**
+     * Gets the value of the texto property.
+     *
+     * @return
+     *     possible object is
+     *     {@link String }
+     *
+     */
+    public String getTexto() {
+<span class="nc" id="L377">        return texto;</span>
+    }
+
+    /**
+     * Sets the value of the texto property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *
+     */
+    public void setTexto(String value) {
+<span class="nc" id="L389">        this.texto = value;</span>
+<span class="nc" id="L390">    }</span>
+
+    /**
+     * Gets the value of the tipoProgramacion property.
+     *
+     */
+    public int getTipoProgramacion() {
+<span class="nc" id="L397">        return tipoProgramacion;</span>
+    }
+
+    /**
+     * Sets the value of the tipoProgramacion property.
+     *
+     */
+    public void setTipoProgramacion(int value) {
+<span class="nc" id="L405">        this.tipoProgramacion = value;</span>
+<span class="nc" id="L406">    }</span>
+
+    /**
+     * Gets the value of the fInsercion property.
+     *
+     * @return
+     *     possible object is
+     *     {@link XMLGregorianCalendar }
+     *
+     */
+    public XMLGregorianCalendar getFInsercion() {
+<span class="nc" id="L417">        return fInsercion;</span>
+    }
+
+    /**
+     * Sets the value of the fInsercion property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link XMLGregorianCalendar }
+     *
+     */
+    public void setFInsercion(XMLGregorianCalendar value) {
+<span class="nc" id="L429">        this.fInsercion = value;</span>
+<span class="nc" id="L430">    }</span>
+
+    /**
+     * Gets the value of the fProgramacion property.
+     *
+     * @return
+     *     possible object is
+     *     {@link XMLGregorianCalendar }
+     *
+     */
+    public XMLGregorianCalendar getFProgramacion() {
+<span class="nc" id="L441">        return fProgramacion;</span>
+    }
+
+    /**
+     * Sets the value of the fProgramacion property.
+     *
+     * @param value
+     *     allowed object is
+     *     {@link XMLGregorianCalendar }
+     *
+     */
+    public void setFProgramacion(XMLGregorianCalendar value) {
+<span class="nc" id="L453">        this.fProgramacion = value;</span>
+<span class="nc" id="L454">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span></div></body></html>
